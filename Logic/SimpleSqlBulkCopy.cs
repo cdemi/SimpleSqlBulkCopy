@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace System.Data.SqlClient
@@ -110,7 +109,7 @@ namespace System.Data.SqlClient
         public void WriteToServer<T>(string destinationTableName, IEnumerable<T> data)
         {
             sqlBulkCopy.DestinationTableName = destinationTableName;
-            DataTable dt = getDataTableFromFields(data);
+            DataTable dt = Common.GetDataTableFromFields(data, sqlBulkCopy);
 
             sqlBulkCopy.WriteToServer(dt);
         }
@@ -118,36 +117,9 @@ namespace System.Data.SqlClient
         public async Task WriteToServerAsync<T>(string destinationTableName, IEnumerable<T> data)
         {
             sqlBulkCopy.DestinationTableName = destinationTableName;
-            DataTable dt = getDataTableFromFields(data);
+            DataTable dt = Common.GetDataTableFromFields(data, sqlBulkCopy);
 
             await sqlBulkCopy.WriteToServerAsync(dt);
-        }
-
-        private DataTable getDataTableFromFields<T>(IEnumerable<T> data)
-        {
-            var dt = new DataTable();
-
-            Type listType = typeof (T);
-
-            foreach (PropertyInfo propertyInfo in listType.GetProperties())
-            {
-                dt.Columns.Add(propertyInfo.Name, propertyInfo.PropertyType);
-                sqlBulkCopy.ColumnMappings.Add(propertyInfo.Name, propertyInfo.Name);
-            }
-
-            foreach (T value in data)
-            {
-                DataRow dr = dt.NewRow();
-
-                foreach (PropertyInfo propertyInfo in listType.GetProperties())
-                {
-                    dr[propertyInfo.Name] = propertyInfo.GetValue(value, null);
-                }
-
-                dt.Rows.Add(dr);
-            }
-
-            return dt;
         }
     }
 }

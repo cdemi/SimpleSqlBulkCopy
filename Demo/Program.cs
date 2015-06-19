@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -40,6 +41,7 @@ namespace Demo
     {
         public MyClass()
         {
+            Foo = "Maps to bar!";
         }
 
         public MyClass(int id, int score, string winner)
@@ -47,11 +49,14 @@ namespace Demo
             Winner = winner;
             Id = id;
             Score = score;
+            Foo = "Maps to bar!";
         }
 
         public string Winner { get; private set; }
         public int Score { get; set; }
         public int Id { get; set; }
         public bool IsFinal { get; set; }
+        [Column("Bar")]
+        public string Foo { get; set; }
     }
 }

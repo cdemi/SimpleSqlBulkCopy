@@ -1,8 +1,9 @@
-﻿-- sample table schema         
+﻿-- sample table schema       
 CREATE TABLE [dbo].[TableName](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Score] [int] NULL,
 	[Winner] [varchar](100) NULL,
+	[Bar] [varchar](100) NULL,
 	[CreatedOn] [datetime] NULL,
 	[IsFinal] [bit] NOT NULL CONSTRAINT [DF_TableName_IsFinal]  DEFAULT ((0)),
  CONSTRAINT [PK_TableName] PRIMARY KEY CLUSTERED 

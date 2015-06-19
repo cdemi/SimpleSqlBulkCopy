@@ -28,3 +28,8 @@ using (var ssbc = new SimpleSqlBulkCopy("ConnectionString"))
 }
 ```
 where `T` is an object of the same Properties (and Type of the Database)
+
+If the name of the column on the target database does match the name of the property
+on your call you can create the mapping by using the `Column` attribute from 
+`System.ComponentModel.DataAnnoations`.  An example of this can be seen in the Demo program
+where the property of "Foo" on the `MyClass` class is mapped to the database column of `Bar`.

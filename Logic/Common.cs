@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Reflection;
 
 namespace System.Data.SqlClient
@@ -13,6 +12,8 @@ namespace System.Data.SqlClient
             Type listType = typeof (T);
             foreach (PropertyInfo propertyInfo in listType.GetProperties())
             {
+                if(IsColumnNotMapped(propertyInfo)) continue;
+
                 var columnName = GetColumnName(propertyInfo);
                 dt.Columns.Add(columnName, propertyInfo.PropertyType);
                 sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
@@ -23,6 +24,8 @@ namespace System.Data.SqlClient
                 DataRow dr = dt.NewRow();
                 foreach (PropertyInfo propertyInfo in listType.GetProperties())
                 {
+                    if (IsColumnNotMapped(propertyInfo)) continue;
+
                     var columnName = GetColumnName(propertyInfo);
                     dr[columnName] = propertyInfo.GetValue(value, null);
                 }
@@ -49,6 +52,18 @@ namespace System.Data.SqlClient
 
             //it doesn't exist so return the property name
             return propertyInfo.Name;
+        }
+
+        /// <summary>
+        /// Check if property is should be mapped
+        /// If the System.ComponentModel.DataAnnotations.NotMappedAttribute is used
+        /// it will skip this property
+        /// </summary>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
+        public static bool IsColumnNotMapped(PropertyInfo propertyInfo)
+        {
+            return propertyInfo.GetCustomAttribute<NotMappedAttribute>(false) != null;
         }
     }
 }

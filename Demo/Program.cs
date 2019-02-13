@@ -52,6 +52,7 @@ namespace Demo
             Foo = "Maps to bar!";
         }
 
+        [NotMapped]
         public string Winner { get; private set; }
         public int Score { get; set; }
         public int Id { get; set; }
